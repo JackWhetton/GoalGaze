@@ -25,3 +25,7 @@ A simple productivity app that motivates users with weather updates, inspiration
 - Dark mode
 - Save goals to localStorage or a backend
 - Daily quote/image scheduler
+
+### Deployment
+This application is deployed via **Netlify** and is publicly accessible at:  
+👉 [https://your-netlify-url.netlify.app](https://your-netlify-url.netlify.app)
