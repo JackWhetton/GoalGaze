@@ -42,7 +42,7 @@
   .app-content {
     display: grid;
     grid-template-columns: 1fr 1.5fr;
-    gap: 30px;
+    gap: 55px;
     align-items: start;
   }
 }
