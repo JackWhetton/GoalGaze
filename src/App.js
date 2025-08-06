@@ -6,7 +6,7 @@ import GoalInputForm from './components/GoalInputForm';
 import GoalList from './components/GoalList';
 // import InspirationalImageViewer from './components/InspirationalImageViewer';
 // import WeatherWidget from './components/WeatherWidget';
-// import QuoteDisplay from './components/QuoteDisplay';
+import QuoteDisplay from './components/QuoteDisplay';
 
 function App() {
   // State for managing goals
@@ -106,6 +106,8 @@ function App() {
       <header className="App-header">
         <h1>GoalGaze - Motivation App</h1>
         <p>Your productivity companion with weather, quotes, images, and goals!</p>
+        
+        <QuoteDisplay />
         
         <div className="app-content">
           <div className="left-column">
