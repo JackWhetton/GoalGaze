@@ -1,0 +1,265 @@
+/* GoalList.css */
+.goal-list {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 12px;
+  padding: 24px;
+  margin: 20px 0;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+  width: 100%;
+  max-width: 800px;
+}
+
+.goal-list h3 {
+  margin: 0 0 20px 0;
+  color: #333;
+  font-size: 1.4em;
+  text-align: center;
+  font-weight: 600;
+}
+
+.goals-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.goal-item {
+  background: white;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 16px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.goal-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border-color: #4CAF50;
+}
+
+.goal-item.completed {
+  background: #f8f9fa;
+  border-color: #4CAF50;
+  opacity: 0.8;
+}
+
+.goal-item.overdue {
+  border-color: #f44336;
+  border-left: 6px solid #f44336;
+}
+
+.goal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.goal-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.priority-indicator,
+.category-indicator {
+  font-size: 16px;
+}
+
+.category-text {
+  font-size: 0.8em;
+  color: #666;
+  text-transform: capitalize;
+  background: #f0f0f0;
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+.goal-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.edit-button,
+.delete-button {
+  background: none;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.edit-button:hover {
+  background: rgba(255, 193, 7, 0.2);
+}
+
+.delete-button:hover {
+  background: rgba(244, 67, 54, 0.2);
+}
+
+.goal-content {
+  margin-bottom: 12px;
+}
+
+.goal-checkbox-container {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.goal-checkbox {
+  margin-top: 4px;
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+  accent-color: #4CAF50;
+}
+
+.goal-text {
+  flex: 1;
+  line-height: 1.5;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.goal-item.completed .goal-text {
+  text-decoration: line-through;
+  color: #888;
+}
+
+.goal-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 12px;
+  border-top: 1px solid #eee;
+}
+
+.goal-dates {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.created-date,
+.due-date {
+  font-size: 0.8em;
+  color: #666;
+}
+
+.due-date.overdue {
+  color: #f44336;
+  font-weight: 600;
+}
+
+.days-indicator {
+  font-weight: 500;
+}
+
+.completion-badge {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: #4CAF50;
+  color: white;
+  font-size: 0.7em;
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+}
+
+/* No goals state */
+.no-goals {
+  text-align: center;
+  padding: 40px 20px;
+  color: #888;
+}
+
+.no-goals-icon {
+  font-size: 4em;
+  margin-bottom: 16px;
+}
+
+.no-goals p {
+  font-size: 1.1em;
+  margin: 0;
+}
+
+/* Priority indicators */
+.goal-item[data-priority="high"] {
+  border-left: 4px solid #f44336;
+}
+
+.goal-item[data-priority="medium"] {
+  border-left: 4px solid #ff9800;
+}
+
+.goal-item[data-priority="low"] {
+  border-left: 4px solid #4CAF50;
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+  .goal-list {
+    margin: 10px;
+    padding: 16px;
+  }
+  
+  .goal-item {
+    padding: 12px;
+  }
+  
+  .goal-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  
+  .goal-actions {
+    align-self: flex-end;
+  }
+  
+  .goal-dates {
+    flex-direction: column;
+    text-align: left;
+  }
+  
+  .completion-badge {
+    position: relative;
+    top: 0;
+    right: 0;
+    margin-top: 8px;
+    align-self: flex-start;
+  }
+}
+
+/* Animation for new goals */
+.goal-item {
+  animation: slideInRight 0.4s ease-out;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Hover effects for better UX */
+.goal-checkbox:hover + .goal-text {
+  color: #4CAF50;
+}
+
+.goal-item.completed:hover {
+  opacity: 1;
+}
