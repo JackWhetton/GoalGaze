@@ -1,124 +1,197 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-// Mock inspirational quotes data
-const inspirationalQuotes = [
+// Local quotes database - reliable and always available
+const motivationalQuotes = [
   {
-    id: 1,
-    text: "Faith is love taking the form of aspiration.",
-    author: "William Ellery Channing"
+    id: 'q1',
+    text: "The way to get started is to quit talking and begin doing.",
+    author: "Walt Disney",
+    tags: ['action', 'motivation'],
+    length: 57
   },
   {
-    id: 2,
-    text: "You can't cross the sea merely by standing and staring at the water.",
-    author: "Rabindranath Tagore"
+    id: 'q2',
+    text: "Your limitation—it's only your imagination.",
+    author: "Unknown",
+    tags: ['motivation', 'mindset'],
+    length: 44
   },
   {
-    id: 3,
-    text: "No bird soars too high if he soars with his own wings.",
-    author: "William Blake"
+    id: 'q3',
+    text: "Great things never come from comfort zones.",
+    author: "Unknown",
+    tags: ['growth', 'courage'],
+    length: 43
   },
   {
-    id: 4,
-    text: "Don't judge each day by the harvest you reap but by the seeds that you plant.",
-    author: "Robert Louis Stevenson"
+    id: 'q4',
+    text: "Dream it. Wish it. Do it.",
+    author: "Unknown",
+    tags: ['dreams', 'action'],
+    length: 25
   },
   {
-    id: 5,
-    text: "Think like a queen. A queen is not afraid to fail. Failure is another stepping stone to greatness.",
-    author: "Oprah Winfrey"
+    id: 'q5',
+    text: "Success doesn't just find you. You have to go out and get it.",
+    author: "Unknown",
+    tags: ['success', 'effort'],
+    length: 62
   },
   {
-    id: 6,
-    text: "Don't stop when you're tired, stop when you're done.",
-    author: "David Goggins"
+    id: 'q6',
+    text: "The harder you work for something, the greater you'll feel when you achieve it.",
+    author: "Unknown",
+    tags: ['work', 'achievement'],
+    length: 79
   },
   {
-    id: 7,
-    text: "You define your own life. Don't let other people write your script.",
-    author: "Oprah Winfrey"
+    id: 'q7',
+    text: "Dream bigger. Do bigger.",
+    author: "Unknown",
+    tags: ['dreams', 'ambition'],
+    length: 23
   },
   {
-    id: 8,
-    text: "You are never too old to set another goal or to dream a new dream.",
-    author: "Malala Yousafzai"
+    id: 'q8',
+    text: "Don't stop when you're tired. Stop when you're done.",
+    author: "Unknown",
+    tags: ['persistence', 'motivation'],
+    length: 53
   },
   {
-    id: 9,
+    id: 'q9',
+    text: "Wake up with determination. Go to bed with satisfaction.",
+    author: "Unknown",
+    tags: ['determination', 'satisfaction'],
+    length: 55
+  },
+  {
+    id: 'q10',
+    text: "Do something today that your future self will thank you for.",
+    author: "Sean Patrick Flanery",
+    tags: ['future', 'action'],
+    length: 59
+  },
+  {
+    id: 'q11',
+    text: "Little things make big days.",
+    author: "Unknown",
+    tags: ['gratitude', 'mindfulness'],
+    length: 27
+  },
+  {
+    id: 'q12',
+    text: "It's going to be hard, but hard does not mean impossible.",
+    author: "Unknown",
+    tags: ['perseverance', 'possibility'],
+    length: 57
+  },
+  {
+    id: 'q13',
+    text: "Don't wait for opportunity. Create it.",
+    author: "Unknown",
+    tags: ['opportunity', 'initiative'],
+    length: 37
+  },
+  {
+    id: 'q14',
+    text: "Sometimes we're tested not to show our weaknesses, but to discover our strengths.",
+    author: "Unknown",
+    tags: ['strength', 'testing'],
+    length: 81
+  },
+  {
+    id: 'q15',
+    text: "The key to success is to focus on goals, not obstacles.",
+    author: "Unknown",
+    tags: ['success', 'focus'],
+    length: 55
+  },
+  {
+    id: 'q16',
+    text: "Be yourself; everyone else is already taken.",
+    author: "Oscar Wilde",
+    tags: ['authenticity', 'self'],
+    length: 44
+  },
+  {
+    id: 'q17',
+    text: "In the middle of difficulty lies opportunity.",
+    author: "Albert Einstein",
+    tags: ['opportunity', 'difficulty'],
+    length: 45
+  },
+  {
+    id: 'q18',
+    text: "Believe you can and you're halfway there.",
+    author: "Theodore Roosevelt",
+    tags: ['belief', 'confidence'],
+    length: 41
+  },
+  {
+    id: 'q19',
+    text: "The only impossible journey is the one you never begin.",
+    author: "Tony Robbins",
+    tags: ['journey', 'beginning'],
+    length: 56
+  },
+  {
+    id: 'q20',
     text: "Success is not final, failure is not fatal: it is the courage to continue that counts.",
-    author: "Winston Churchill"
-  },
-  {
-    id: 10,
-    text: "Spread love everywhere you go.",
-    author: "Mother Teresa"
-  },
-  {
-    id: 11,
-    text: "It always seems impossible until it's done.",
-    author: "Nelson Mandela"
-  },
-  {
-    id: 12,
-    text: "Believe you can, and you're halfway there.",
-    author: "Theodore Roosevelt"
-  },
-  {
-    id: 13,
-    text: "In a gentle way, you can shake the world.",
-    author: "Mahatma Gandhi"
-  },
-  {
-    id: 14,
-    text: "Try to be a rainbow in someone else's cloud.",
-    author: "Maya Angelou"
-  },
-  {
-    id: 15,
-    text: "When you have a dream, you've got to grab it and never let go.",
-    author: "Carol Burnett"
+    author: "Winston Churchill",
+    tags: ['success', 'courage'],
+    length: 85
   }
 ];
 
-// Helper function to get random quote
-const getRandomQuote = (quotes) => {
-  const randomIndex = Math.floor(Math.random() * quotes.length);
-  return quotes[randomIndex];
-};
+// Simulated async thunk for fetching a random quote from our local database
+export const fetchRandomQuote = createAsyncThunk(
+  'quotes/fetchRandom',
+  async (_, { rejectWithValue, getState }) => {
+    try {
+      // Simulate API delay for realistic experience
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      const { quotes } = getState();
+      const currentQuoteId = quotes.currentQuote?.id;
+      
+      // Filter out the current quote to avoid showing the same quote
+      const availableQuotes = motivationalQuotes.filter(quote => quote.id !== currentQuoteId);
+      
+      // If all quotes have been shown, reset and use all quotes
+      const quotesToChooseFrom = availableQuotes.length > 0 ? availableQuotes : motivationalQuotes;
+      
+      // Get random quote
+      const randomIndex = Math.floor(Math.random() * quotesToChooseFrom.length);
+      const selectedQuote = quotesToChooseFrom[randomIndex];
+      
+      return selectedQuote;
+    } catch (error) {
+      return rejectWithValue(error.message);
+    }
+  }
+);
 
-// Initial state with mock data
+// Initial state with a default quote (fallback)
 const initialState = {
-  currentQuote: getRandomQuote(inspirationalQuotes),
-  allQuotes: inspirationalQuotes,
+  currentQuote: {
+    id: 'default',
+    text: "The way to get started is to quit talking and begin doing.",
+    author: "Walt Disney",
+    tags: ['motivational'],
+    length: 57
+  },
   favoriteQuotes: [],
   quoteHistory: [],
   loading: false,
-  error: null
+  error: null,
+  lastUpdated: null
 };
 
 const quotesSlice = createSlice({
   name: 'quotes',
   initialState,
   reducers: {
-    // Action to set a new random quote
-    setRandomQuote: (state) => {
-      const newQuote = getRandomQuote(state.allQuotes);
-      // Ensure we don't get the same quote twice in a row
-      if (newQuote.id === state.currentQuote?.id && state.allQuotes.length > 1) {
-        return quotesSlice.caseReducers.setRandomQuote(state);
-      }
-      
-      // Add current quote to history if it exists
-      if (state.currentQuote) {
-        state.quoteHistory.unshift(state.currentQuote);
-        // Keep only last 10 quotes in history
-        if (state.quoteHistory.length > 10) {
-          state.quoteHistory = state.quoteHistory.slice(0, 10);
-        }
-      }
-      
-      state.currentQuote = newQuote;
-    },
-    
     // Action to set a specific quote
     setQuote: (state, action) => {
       if (state.currentQuote) {
@@ -128,6 +201,7 @@ const quotesSlice = createSlice({
         }
       }
       state.currentQuote = action.payload;
+      state.lastUpdated = new Date().toISOString();
     },
     
     // Action to add quote to favorites
@@ -150,36 +224,55 @@ const quotesSlice = createSlice({
       state.quoteHistory = [];
     },
     
-    // Actions for loading states (for future API integration)
-    setLoading: (state, action) => {
-      state.loading = action.payload;
-    },
-    
-    setError: (state, action) => {
-      state.error = action.payload;
-      state.loading = false;
+    // Action to clear error
+    clearError: (state) => {
+      state.error = null;
     }
+  },
+  extraReducers: (builder) => {
+    builder
+      // Handle fetchRandomQuote
+      .addCase(fetchRandomQuote.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchRandomQuote.fulfilled, (state, action) => {
+        state.loading = false;
+        
+        // Add current quote to history if it exists
+        if (state.currentQuote) {
+          state.quoteHistory.unshift(state.currentQuote);
+          if (state.quoteHistory.length > 10) {
+            state.quoteHistory = state.quoteHistory.slice(0, 10);
+          }
+        }
+        
+        state.currentQuote = action.payload;
+        state.lastUpdated = new Date().toISOString();
+      })
+      .addCase(fetchRandomQuote.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
   }
 });
 
 // Export actions
 export const {
-  setRandomQuote,
   setQuote,
   addToFavorites,
   removeFromFavorites,
   clearHistory,
-  setLoading,
-  setError
+  clearError
 } = quotesSlice.actions;
 
 // Export selectors
 export const selectCurrentQuote = (state) => state.quotes.currentQuote;
-export const selectAllQuotes = (state) => state.quotes.allQuotes;
 export const selectFavoriteQuotes = (state) => state.quotes.favoriteQuotes;
 export const selectQuoteHistory = (state) => state.quotes.quoteHistory;
 export const selectQuotesLoading = (state) => state.quotes.loading;
 export const selectQuotesError = (state) => state.quotes.error;
+export const selectLastUpdated = (state) => state.quotes.lastUpdated;
 export const selectIsQuoteFavorite = (state, quoteId) =>
   state.quotes.favoriteQuotes.some(quote => quote.id === quoteId);
 

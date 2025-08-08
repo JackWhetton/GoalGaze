@@ -2,12 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { 
   selectCurrentQuote, 
-  fetchRandomQuote, 
+  setRandomQuote, 
   addToFavorites, 
   removeFromFavorites,
-  selectFavoriteQuotes,
-  selectQuotesLoading,
-  selectQuotesError 
+  selectFavoriteQuotes 
 } from '../redux/quotesSlice';
 import './QuoteDisplay.css';
 
@@ -15,25 +13,20 @@ const QuoteDisplay = () => {
   const dispatch = useDispatch();
   const currentQuote = useSelector(selectCurrentQuote);
   const favoriteQuotes = useSelector(selectFavoriteQuotes);
-  const loading = useSelector(selectQuotesLoading);
-  const error = useSelector(selectQuotesError);
 
   const [isVisible, setIsVisible] = useState(false);
 
-  // Initialize with the current quote from Redux and fetch a new one on mount
+  // Initialize with the current quote from Redux
   useEffect(() => {
     // Trigger fade-in animation
     setTimeout(() => setIsVisible(true), 100);
-    
-    // Fetch a new quote on component mount
-    dispatch(fetchRandomQuote());
-  }, [dispatch]);
+  }, []);
 
-  // Function to change quote using Redux API call
+  // Function to change quote using Redux
   const changeQuote = () => {
     setIsVisible(false);
     setTimeout(() => {
-      dispatch(fetchRandomQuote());
+      dispatch(setRandomQuote());
       setIsVisible(true);
     }, 300);
   };
@@ -53,15 +46,6 @@ const QuoteDisplay = () => {
 
   return (
     <div className={`quote-display ${isVisible ? 'visible' : ''}`}>
-      {error && (
-        <div className="quote-error">
-          <p>Failed to load quote: {error}</p>
-          <button onClick={changeQuote} className="retry-btn">
-            Try Again
-          </button>
-        </div>
-      )}
-      
       <div className="quote-content">
         <blockquote className="quote-text">
           "{currentQuote.text}"
@@ -76,10 +60,9 @@ const QuoteDisplay = () => {
         <button 
           className="new-quote-btn" 
           onClick={changeQuote}
-          disabled={loading}
           title="Get new quote"
         >
-          {loading ? '⏳' : '✨'}
+          ✨
         </button>
         
         {/* Button to favorite/unfavorite */}
