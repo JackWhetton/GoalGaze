@@ -1,63 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { 
+  selectCurrentBackground, 
+  selectAvailableImages, 
+  setBackgroundImage, 
+  addCustomImage 
+} from '../redux/backgroundSlice';
 import './InspirationalImageViewer.css';
 
-// Default inspirational images (outside component to avoid re-creation)
-const defaultImages = [
-  {
-    id: 'default1',
-    url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
-    name: 'Mountain Peak'
-  },
-  {
-    id: 'default2', 
-    url: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2071&q=80',
-    name: 'Forest Path'
-  },
-  {
-    id: 'default3',
-    url: 'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
-    name: 'Forest Bridge'
-  }
-];
-
-const InspirationalImageViewer = ({ onBackgroundChange }) => {
-  const [selectedImage, setSelectedImage] = useState(null);
+const InspirationalImageViewer = () => {
+  const dispatch = useDispatch();
+  const currentBackground = useSelector(selectCurrentBackground);
+  const availableImages = useSelector(selectAvailableImages);
   const [customImageName, setCustomImageName] = useState('');
 
-  // Initialize with first default image
-  useEffect(() => {
-    const savedImage = localStorage.getItem('selectedBackgroundImage');
-    if (savedImage) {
-      try {
-        const parsed = JSON.parse(savedImage);
-        setSelectedImage(parsed);
-        if (onBackgroundChange) {
-          onBackgroundChange(parsed.url);
-        }
-      } catch (error) {
-        console.error('Error loading saved image:', error);
-        // Fall back to first default image
-        setSelectedImage(defaultImages[0]);
-        if (onBackgroundChange) {
-          onBackgroundChange(defaultImages[0].url);
-        }
-      }
-    } else {
-      // Set first default image as initial background
-      setSelectedImage(defaultImages[0]);
-      if (onBackgroundChange) {
-        onBackgroundChange(defaultImages[0].url);
-      }
-    }
-  }, [onBackgroundChange]);
-
-  // Handle selecting a default image
-  const selectDefaultImage = (image) => {
-    setSelectedImage(image);
-    localStorage.setItem('selectedBackgroundImage', JSON.stringify(image));
-    if (onBackgroundChange) {
-      onBackgroundChange(image.url);
-    }
+  // Handle selecting an image
+  const handleSelectImage = (image) => {
+    dispatch(setBackgroundImage(image));
   };
 
   // Handle custom file selection
@@ -67,15 +26,13 @@ const InspirationalImageViewer = ({ onBackgroundChange }) => {
       const reader = new FileReader();
       reader.onload = (e) => {
         const customImage = {
-          id: 'custom-' + Date.now(),
           url: e.target.result,
-          name: customImageName || file.name.replace(/\.[^/.]+$/, "")
+          name: customImageName || file.name.replace(/\.[^/.]+$/, ""),
+          source: 'custom'
         };
-        setSelectedImage(customImage);
-        localStorage.setItem('selectedBackgroundImage', JSON.stringify(customImage));
-        if (onBackgroundChange) {
-          onBackgroundChange(customImage.url);
-        }
+        dispatch(addCustomImage(customImage));
+        dispatch(setBackgroundImage(customImage));
+        setCustomImageName(''); // Reset the name input
       };
       reader.readAsDataURL(file);
     }
@@ -88,24 +45,24 @@ const InspirationalImageViewer = ({ onBackgroundChange }) => {
         <h3>🖼️ Background</h3>
         
         {/* Current Selection Display */}
-        {selectedImage && (
+        {currentBackground && (
           <div className="current-selection">
             <div className="selected-image-preview">
-              <img src={selectedImage.url} alt={selectedImage.name} />
+              <img src={currentBackground.url} alt={currentBackground.name} />
             </div>
-            <p className="selected-image-name">Current: {selectedImage.name}</p>
+            <p className="selected-image-name">Current: {currentBackground.name}</p>
           </div>
         )}
 
-        {/* Default Images */}
+        {/* Available Images */}
         <div className="default-images-section">
           <h4>Choose a Background:</h4>
           <div className="default-images">
-            {defaultImages.map((image) => (
+            {availableImages.map((image) => (
               <div 
                 key={image.id}
-                className={`image-option ${selectedImage?.id === image.id ? 'selected' : ''}`}
-                onClick={() => selectDefaultImage(image)}
+                className={`image-option ${currentBackground?.id === image.id ? 'selected' : ''}`}
+                onClick={() => handleSelectImage(image)}
               >
                 <img src={image.url} alt={image.name} />
                 <span className="image-name">{image.name}</span>

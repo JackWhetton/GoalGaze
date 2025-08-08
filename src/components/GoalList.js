@@ -1,7 +1,24 @@
 import React from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { selectAllGoals, toggleGoal, deleteGoal } from '../redux/goalsSlice';
 import './GoalList.css';
 
-const GoalList = ({ goals, onToggleGoal, onDeleteGoal, onEditGoal }) => {
+const GoalList = () => {
+  const goals = useSelector(selectAllGoals);
+  const dispatch = useDispatch();
+
+  const handleToggleGoal = (goalId) => {
+    dispatch(toggleGoal(goalId));
+  };
+
+  const handleDeleteGoal = (goalId) => {
+    dispatch(deleteGoal(goalId));
+  };
+
+  const handleEditGoal = (goalId) => {
+    // TODO: Implement edit functionality
+    console.log('Edit goal:', goalId);
+  };
   if (!goals || goals.length === 0) {
     return (
       <div className="goal-list">
@@ -88,24 +105,20 @@ const GoalList = ({ goals, onToggleGoal, onDeleteGoal, onEditGoal }) => {
                   <span className="category-text">{goal.category}</span>
                 </div>
                 <div className="goal-actions">
-                  {onEditGoal && (
-                    <button 
-                      className="edit-button"
-                      onClick={() => onEditGoal(goal.id)}
-                      title="Edit goal"
-                    >
-                      ✏️
-                    </button>
-                  )}
-                  {onDeleteGoal && (
-                    <button 
-                      className="delete-button"
-                      onClick={() => onDeleteGoal(goal.id)}
-                      title="Delete goal"
-                    >
-                      🗑️
-                    </button>
-                  )}
+                  <button 
+                    className="edit-button"
+                    onClick={() => handleEditGoal(goal.id)}
+                    title="Edit goal"
+                  >
+                    ✏️
+                  </button>
+                  <button 
+                    className="delete-button"
+                    onClick={() => handleDeleteGoal(goal.id)}
+                    title="Delete goal"
+                  >
+                    🗑️
+                  </button>
                 </div>
               </div>
 
@@ -115,7 +128,7 @@ const GoalList = ({ goals, onToggleGoal, onDeleteGoal, onEditGoal }) => {
                     type="checkbox"
                     id={`goal-${goal.id}`}
                     checked={goal.completed}
-                    onChange={() => onToggleGoal && onToggleGoal(goal.id)}
+                    onChange={() => handleToggleGoal(goal.id)}
                     className="goal-checkbox"
                   />
                   <label htmlFor={`goal-${goal.id}`} className="goal-text">

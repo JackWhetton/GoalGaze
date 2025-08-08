@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { addGoal } from '../redux/goalsSlice';
 import './GoalInputForm.css';
 
-const GoalInputForm = ({ onAddGoal }) => {
+const GoalInputForm = () => {
+  const dispatch = useDispatch();
   const [goalText, setGoalText] = useState('');
   const [priority, setPriority] = useState('medium');
   const [category, setCategory] = useState('personal');
@@ -47,14 +50,11 @@ const GoalInputForm = ({ onAddGoal }) => {
       priority,
       category,
       dueDate: dueDate || null,
-      completed: false,
-      createdAt: new Date().toISOString(),
+      completed: false
     };
 
-    // Call parent function to add goal
-    if (onAddGoal) {
-      onAddGoal(newGoal);
-    }
+    // Dispatch action to add goal to Redux store
+    dispatch(addGoal(newGoal));
 
     // Reset form
     setGoalText('');
