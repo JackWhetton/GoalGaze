@@ -4,7 +4,8 @@ import {
   selectCurrentBackground, 
   selectAvailableImages, 
   setBackgroundImage, 
-  addCustomImage 
+  addCustomImage,
+  refreshRandomImages
 } from '../redux/backgroundSlice';
 import './InspirationalImageViewer.css';
 
@@ -39,6 +40,11 @@ const InspirationalImageViewer = () => {
     event.target.value = ''; // Reset input
   };
 
+  // Handle refreshing random images
+  const handleRefreshImages = () => {
+    dispatch(refreshRandomImages());
+  };
+
   return (
     <div className="inspirational-image-viewer">
       <div className="background-selector">
@@ -56,7 +62,16 @@ const InspirationalImageViewer = () => {
 
         {/* Available Images */}
         <div className="default-images-section">
-          <h4>Choose a Background:</h4>
+          <div className="section-header">
+            <h4>Choose a Background:</h4>
+            <button 
+              className="refresh-images-btn"
+              onClick={handleRefreshImages}
+              title="Get new random images"
+            >
+              🔄
+            </button>
+          </div>
           <div className="default-images">
             {availableImages.map((image) => (
               <div 

@@ -1,21 +1,42 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-// Default background images
+// Default background images using free, high-quality sources
 const defaultImages = [
   {
     id: 'default1',
-    url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
-    name: 'Mountain Peak'
+    url: 'https://picsum.photos/1920/1080?random=1',
+    name: 'Nature Scene',
+    source: 'Lorem Picsum'
   },
   {
     id: 'default2', 
-    url: 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2071&q=80',
-    name: 'Forest Path'
+    url: 'https://picsum.photos/1920/1080?random=2',
+    name: 'Scenic View',
+    source: 'Lorem Picsum'
   },
   {
     id: 'default3',
-    url: 'https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
-    name: 'Forest Bridge'
+    url: 'https://picsum.photos/1920/1080?random=3',
+    name: 'Landscape',
+    source: 'Lorem Picsum'
+  },
+  {
+    id: 'default4',
+    url: 'https://picsum.photos/1920/1080?random=4',
+    name: 'Mountain View',
+    source: 'Lorem Picsum'
+  },
+  {
+    id: 'default5',
+    url: 'https://picsum.photos/1920/1080?random=5',
+    name: 'Ocean Breeze',
+    source: 'Lorem Picsum'
+  },
+  {
+    id: 'default6',
+    url: 'https://picsum.photos/1920/1080?random=6',
+    name: 'Forest Calm',
+    source: 'Lorem Picsum'
   }
 ];
 
@@ -23,8 +44,9 @@ const defaultImages = [
 const initialState = {
   currentBackground: {
     id: 'default1',
-    url: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80',
-    name: 'Mountain Peak'
+    url: 'https://picsum.photos/1920/1080?random=1',
+    name: 'Nature Scene',
+    source: 'Lorem Picsum'
   },
   availableImages: defaultImages,
   customImages: [],
@@ -84,6 +106,20 @@ const backgroundSlice = createSlice({
       }
     },
     
+    // Action to refresh random images
+    refreshRandomImages: (state) => {
+      // Update the random image URLs to get new images
+      state.availableImages = state.availableImages.map(image => {
+        if (image.source === 'Lorem Picsum') {
+          return {
+            ...image,
+            url: `https://picsum.photos/1920/1080?random=${Math.floor(Math.random() * 1000)}`
+          };
+        }
+        return image;
+      });
+    },
+
     // Actions for loading states (for future API integration)
     setLoading: (state, action) => {
       state.loading = action.payload;
@@ -102,6 +138,7 @@ export const {
   addCustomImage,
   removeCustomImage,
   loadSavedBackground,
+  refreshRandomImages,
   setLoading,
   setError
 } = backgroundSlice.actions;
