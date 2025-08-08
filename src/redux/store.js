@@ -2,12 +2,14 @@ import { configureStore } from '@reduxjs/toolkit';
 import goalsReducer from './goalsSlice';
 import backgroundReducer from './backgroundSlice';
 import quotesReducer from './quotesSlice';
+import weatherReducer from './weatherSlice';
 
 export const store = configureStore({
   reducer: {
     goals: goalsReducer,
     background: backgroundReducer,
     quotes: quotesReducer,
+    weather: weatherReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

@@ -6,7 +6,7 @@ import './App.css';
 import GoalInputForm from './components/GoalInputForm';
 import GoalList from './components/GoalList';
 import InspirationalImageViewer from './components/InspirationalImageViewer';
-// import WeatherWidget from './components/WeatherWidget';
+import WeatherWidget from './components/WeatherWidget';
 import QuoteDisplay from './components/QuoteDisplay';
 
 // Import Redux selectors and actions
@@ -45,6 +45,7 @@ function App() {
           </div>
           <div className="right-column">
             <GoalList />
+            <WeatherWidget />
           </div>
         </div>
         
